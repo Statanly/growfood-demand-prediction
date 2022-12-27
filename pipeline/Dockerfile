@@ -14,4 +14,4 @@ RUN poetry config virtualenvs.in-project false \
 COPY . .
 
 EXPOSE 1928
-CMD ./run_server.sh
+CMD ["poetry", "run", "python3", "-m", "uvicorn", "server:app", "--reload", "--port", "1928", "--host", "0.0.0.0", "--loop", "uvloop"]
