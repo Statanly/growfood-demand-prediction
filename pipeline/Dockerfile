@@ -13,5 +13,5 @@ RUN poetry config virtualenvs.in-project false \
 
 COPY . .
 
-EXPOSE 8080
-CMD /app/run_server.sh
+EXPOSE 1928
+CMD ./run_server.sh
