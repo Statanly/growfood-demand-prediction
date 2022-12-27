@@ -14,4 +14,4 @@ RUN poetry config virtualenvs.in-project false \
 COPY . .
 
 EXPOSE 8080
-CMD ['poetry', 'run', 'python3', 'server.py']
+CMD /app/run_server.sh
