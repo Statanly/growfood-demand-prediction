@@ -22,6 +22,8 @@ class RegressorsSection(BaseModel):
             'custom_orders_rate',
             'orders_count_last_year'
         ]
+        assert all(map(lambda k: k in values.keys(), keys))
+
         is_same_len = lambda l: l == len(values[keys[0]])
         assert all(map(is_same_len, [len(values[key]) for key in keys])), \
                 'all regressors should be same length'
