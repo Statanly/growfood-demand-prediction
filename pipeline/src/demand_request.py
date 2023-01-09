@@ -33,4 +33,5 @@ class RegressorsSection(BaseModel):
 class DemandRequest(BaseModel):
     regressors: RegressorsSection
     current_date: date
+    city_id: int
     # predict_days_n: int
