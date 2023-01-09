@@ -20,6 +20,20 @@ def make_df(features: DemandRequest) -> pd.DataFrame:
 
     df.rename(columns={'orders_count': 'target'}, inplace=True)
 
+    # lag depends on city
+    if features.city_id == 1:
+        # spb
+        lag = 3
+    elif features.city_id == 2:
+        # msk
+        lag = 4
+    else:
+        raise ValueError('Unknown city_id')
+
+    lagged_target = df.target.iloc[lag:].tolist()
+    df = df.iloc[:-lag]
+    df.loc[:, 'target'] = lagged_target
+
     # rearrange columns
     cols_order = [
         'date',
