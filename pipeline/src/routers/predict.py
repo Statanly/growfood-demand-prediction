@@ -18,7 +18,7 @@ def make_df(features: DemandRequest) -> pd.DataFrame:
     dates = [date - datetime.timedelta(days=x) for x in range(len(df))]
     df.loc[:, 'date'] = dates
 
-    df.rename(columns={'orders_count': 'target'}, inplace=True)
+    df.rename(columns={'deliveries_count': 'target'}, inplace=True)
 
     # lag depends on city
     if features.city_id == 1:
