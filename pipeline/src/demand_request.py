@@ -9,18 +9,18 @@ class RegressorsSection(BaseModel):
     """
     Minimum regressors length is 31*2 elements. Maximum length is 31*3
     """
-    orders_count: conlist(int, min_items=MIN_LEN)
+    deliveries_count: conlist(int, min_items=MIN_LEN)
     new_orders_count: conlist(int, min_items=MIN_LEN)
     custom_orders_rate: conlist(int, min_items=MIN_LEN)
-    orders_count_last_year: conlist(int, min_items=MIN_LEN)
+    deliveries_count_last_year: conlist(int, min_items=MIN_LEN)
 
     @root_validator
     def local_domain_len(cls, values):
         keys = [
-            'orders_count',
+            'deliveries_count',
             'new_orders_count',
             'custom_orders_rate',
-            'orders_count_last_year'
+            'deliveries_count_last_year'
         ]
         assert all(map(lambda k: k in values.keys(), keys))
 
