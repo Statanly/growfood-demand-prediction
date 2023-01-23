@@ -12,6 +12,7 @@ from models import LstmMlp
 
 class PredictiveModel:
     def __init__(self, n_params: int):
+        self._n_params = n_params
         self._model = LstmMlp(n_params)
 
     def __maybe_upd_best_model(self, metric: float, model: nn.Module):
@@ -44,13 +45,15 @@ class PredictiveModel:
 
     def fit_predict(self, df: pd.DataFrame) -> float:
         loss = nn.L1Loss()
+        torch.manual_seed(42)
+        self._model = LstmMlp(self._n_params)
         opt = optim.Adadelta(self._model.parameters())
 
         x_train, y_train, x_test = self.__df_to_tensor(df)
 
         self._model.train()
         self.__reset_best_model()
-        for epoch in tqdm(range(100)):
+        for epoch in tqdm(range(500)):
             opt.zero_grad()
 
             pred = self._model(x_train)
