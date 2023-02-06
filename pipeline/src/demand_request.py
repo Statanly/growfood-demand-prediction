@@ -11,7 +11,7 @@ class RegressorsSection(BaseModel):
     """
     deliveries_count: conlist(int, min_items=MIN_LEN)
     new_orders_count: conlist(int, min_items=MIN_LEN)
-    custom_orders_rate: conlist(int, min_items=MIN_LEN)
+    custom_orders_rate: conlist(float, min_items=MIN_LEN)
     deliveries_count_last_year: conlist(int, min_items=MIN_LEN)
 
     @root_validator

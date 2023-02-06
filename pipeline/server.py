@@ -1,7 +1,7 @@
 import uvicorn
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 
-from src.routers import predict_router
+from src.routes import predict_router
 
 app = FastAPI()
 app.include_router(predict_router)

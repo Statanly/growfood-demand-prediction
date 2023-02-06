@@ -1,59 +1,21 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 from pathlib import Path
-import matplotlib.pyplot as plt
 import pandas as pd
 
 import warnings
 
 warnings.filterwarnings("ignore")
 
-
-# # load data
-
-# In[2]:
-
-
 root = Path('data/processed/')
 
-
-# In[3]:
-
-
 orders_count = pd.read_csv(root / 'orders_count.csv')
-orders_count.head(3)
-
-
-# In[4]:
-
 
 new_orders_count = pd.read_csv(root / 'new_orders_count.csv')
-new_orders_count.head(3)
-
-
-# In[5]:
-
 
 fact_deliveries_count = pd.read_csv(root / 'fact_deliveries_count.csv')
-fact_deliveries_count.head(3)
-
-
-# In[6]:
-
 
 f = lambda s: s.split('_')[0]
 fact_deliveries_count = fact_deliveries_count.assign(product_name=fact_deliveries_count.name.apply(f))
 fact_deliveries_count.head(3)
-
-
-# # make dataset
-
-# In[7]:
-
 
 city_id = 1
 product = 'balance'
@@ -71,10 +33,6 @@ df = df.rename(dict(count_x='orders_count',
                     count_y='new_orders_count'), axis=1)
 df = pd.merge(df, df3[cols], on='date').rename(dict(count='deliveries_count'), axis=1)
 df.sort_values('date', inplace=True)
-df.head(3)
-
-
-# In[8]:
 
 
 def fill_nan_dates(subdf: pd.DataFrame) -> pd.DataFrame:
@@ -87,39 +45,15 @@ def fill_nan_dates(subdf: pd.DataFrame) -> pd.DataFrame:
     d = d.reset_index()
     return d
 
+
 df = fill_nan_dates(df)
 df = df.iloc[-200:]
-
-
-# In[9]:
-
-
-df = df.rename(dict(date='timestamp', deliveries_count='target'), axis=1)        .assign(segment='main')
-df.head()
-
-
-# In[10]:
-
-
+df = df.rename(dict(date='timestamp', deliveries_count='target'), axis=1)\
+    .assign(segment='main')
 df_raw = df.copy()
 
 
-# In[11]:
-
-
-df_raw.head()
-
-
-# # make etna dataset
-
-# In[12]:
-
-
 from etna import transforms as T
-
-
-# In[13]:
-
 
 target_transforms = [
     T.MeanTransform(in_column='target', window=7, out_column='mean_3'),
@@ -137,10 +71,6 @@ exog_transforms = [
     T.LagTransform(in_column='orders_count', lags=[5, 6, 7], out_column='lag_orders_count'),
     T.LagTransform(in_column='new_orders_count', lags=[2, 7, 9], out_column='lag_new_orders_count')
 ]
-
-
-# In[14]:
-
 
 import pandas as pd
 from etna.datasets import TSDataset
@@ -172,37 +102,10 @@ ts = TSDataset(df, freq="D", df_exog=exog_ts, known_future='all')
 # # Make train/test split
 # train_ts, test_ts = ts.train_test_split(test_size=HORIZON)
 
-
-# In[15]:
-
-
 ts.df = ts.df.fillna(0)
 ts.df_exog = ts.df_exog.fillna(0)
-ts.head(3)
-
-
-# In[16]:
-
-
-ts.regressors
-
-
-# In[17]:
-
-
-ts.plot()
-
-
-# In[18]:
-
 
 from etna.analysis import sample_pacf_plot
-
-sample_pacf_plot(ts, lags=14)
-
-
-# In[19]:
-
 
 from etna.analysis.outliers import get_anomalies_density
 from etna.analysis import plot_anomalies
@@ -210,17 +113,6 @@ from etna.analysis import plot_anomalies
 anomaly_seq_dict = get_anomalies_density(
   ts, window_size=31, distance_coef=1, n_neighbors=10)
 plot_anomalies(ts, anomaly_seq_dict)
-
-
-# In[ ]:
-
-
-
-
-
-# # one model prediction
-
-# In[20]:
 
 
 from etna.models.nn.mlp import MLPModel
@@ -233,10 +125,6 @@ import random
 torch.manual_seed(42)
 random.seed(42)
 np.random.seed(42)
-
-
-# In[21]:
-
 
 _, cols = zip(*ts.df.columns.tolist())
 cols = list(cols)
@@ -274,17 +162,6 @@ transform_deepar = PytorchForecastingTransform(
 )
 
 
-# In[23]:
-
-
-# from etna.settings import SETTINGS
-
-# SETTINGS.torch_required
-
-
-# In[24]:
-
-
 from etna.models.nn.deepar import DeepARModel
 from etna.metrics import SMAPE, MAPE, MAE
 from etna.pipeline import Pipeline
@@ -308,50 +185,7 @@ pipeline_deepar = Pipeline(
     transforms=[transform_date, transform_deepar],
 )
 
-
-# In[25]:
-
-
 metrics_deepar, forecast_deepar, fold_info_deepar = pipeline_deepar.backtest(ts, metrics=metrics, n_folds=1, n_jobs=1)
-
-
-# In[ ]:
-
-
-ts
-
-
-# In[ ]:
-
-
-ts
-
-
-# In[ ]:
-
-
-metrics_deepar
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 from etna.models import (
@@ -399,9 +233,6 @@ pipelines = [
 # voting_ensemble = VotingEnsemble(pipelines, regressor=GradientBoostingRegressor)
 
 
-# In[ ]:
-
-
 from etna.metrics import MAE, SMAPE, MSE
 
 metrics_list = [MAE(), SMAPE(), MSE()]
@@ -413,57 +244,13 @@ metrics_df, backtest_df, _ = pipelines[0].backtest(
 )
 
 
-# In[ ]:
-
-
-metrics_df
-
-
-# In[ ]:
-
-
 from etna.analysis.plotters import plot_backtest
 
 plot_backtest(backtest_df, ts, history_len=20)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# # Other models
-
-# In[ ]:
 
 
 Pipeline(
         model=HoltWintersModel(use_boxcox=True, trend='add', damped_trend=False, seasonal='add', seasonal_periods=7),
         horizon=HORIZON
     )
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 

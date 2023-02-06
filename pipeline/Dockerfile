@@ -12,6 +12,6 @@ RUN poetry config virtualenvs.in-project false \
     && poetry install --no-dev --no-interaction --no-ansi
 
 COPY . .
-
+# poetry run python3 -m uvicorn server:app --reload --port 9015 --host 0.0.0.0 --loop uvloop
 EXPOSE 9015
 CMD ["poetry", "run", "python3", "-m", "uvicorn", "server:app", "--reload", "--port", "9015", "--host", "0.0.0.0", "--loop", "uvloop"]

@@ -5,7 +5,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 from loader import DatasetLoader
-from loader.transforms import (
+from pipeline.transforms import (
     MovingAvgTransform,
     HoltWintersPredictTransform,
     IsWeekendTransform,
