@@ -2,7 +2,7 @@ import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from tqdm import tqdm
 
-from .transform import Transform
+from transform import Transform
 
 
 class HoltWintersPredictTransform(Transform):

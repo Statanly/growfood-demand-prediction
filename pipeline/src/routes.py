@@ -4,8 +4,8 @@ import warnings
 import pandas as pd
 from fastapi import APIRouter
 
-from pipeline.models import *
-from pipeline.src import DemandRequest
+from src.models import *
+from demand_request import DemandRequest
 
 warnings.filterwarnings("ignore")
 predict_router = APIRouter()
