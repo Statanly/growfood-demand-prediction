@@ -4,10 +4,8 @@ import warnings
 import pandas as pd
 from fastapi import APIRouter
 
-from pipeline.models.etna_predictor import etna_forecast
-from pipeline.models.lstm_predictor import LstmPredictor
-from pipeline.models.sarimax_predictor import sarimax_forecast
-from pipeline.src.demand_request import DemandRequest
+from ..models import *
+from .demand_request import DemandRequest
 
 warnings.filterwarnings("ignore")
 predict_router = APIRouter()
