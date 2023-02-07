@@ -5,7 +5,7 @@ import pandas as pd
 from fastapi import APIRouter
 
 from src.models import *
-from demand_request import DemandRequest
+from src.demand_request import DemandRequest
 
 warnings.filterwarnings("ignore")
 predict_router = APIRouter()

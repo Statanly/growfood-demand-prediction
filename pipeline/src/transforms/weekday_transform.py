@@ -1,6 +1,6 @@
 import pandas as pd
 
-from transform import Transform
+from .transform import Transform
 
 
 class WeekdayTransform(Transform):

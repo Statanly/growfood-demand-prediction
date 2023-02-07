@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import pandas as pd
 
-from transform import Transform
+from .transform import Transform
 
 
 class IsWeekendTransform(Transform):

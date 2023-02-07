@@ -2,7 +2,7 @@ from statistics import mean
 
 import pandas as pd
 
-from transform import Transform
+from .transform import Transform
 
 
 class MovingAvgTransform(Transform):
